@@ -1,21 +1,29 @@
 {
   "name": "async-priority-queue",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "build": "tsc --p ./ --sourceMap false",
-    "test": "karma start"
+    "test": "karma start",
+    "lint": "npx eslint -c .eslintrc.js 'src/**/*.ts' --fix",
+    "prettier": "prettier --config .prettierrc.json --write src/**/*.ts"
   },
   "author": "“Vlad <“v.borsh.io@gmail.com”>",
   "license": "ISC",
   "devDependencies": {
     "@types/jasmine": "^3.5.10",
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-prettier": "^3.1.2",
     "jasmine": "^3.5.0",
     "karma": "^4.4.1",
     "karma-chrome-launcher": "^3.1.0",
     "karma-jasmine": "^3.1.1",
-    "karma-typescript": "^5.0.1",
+    "karma-typescript": "^5.0.2",
+    "prettier": "^2.0.2",
     "puppeteer": "^2.1.1",
     "typescript": "^3.8.3"
   }
