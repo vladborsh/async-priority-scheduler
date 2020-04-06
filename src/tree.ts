@@ -1,5 +1,14 @@
 import { Node } from './utils/node.interface';
-import { getParent, getUncle, maybe, getGrandParent, getSibling, isOnLeft, swapValues, hasRedChild } from './utils/functions';
+import {
+    getParent,
+    getUncle,
+    maybe,
+    getGrandParent,
+    getSibling,
+    isOnLeft,
+    swapValues,
+    hasRedChild,
+} from './utils/functions';
 import { Color } from './utils/color.enum';
 
 export class Tree<T> {
@@ -12,14 +21,10 @@ export class Tree<T> {
             right: null,
             parent: null,
             color: Color.BLACK,
-        }
+        };
 
         this.insertNode(this.root, fullNode);
         this.insertRepairTree(fullNode);
-
-        if (this.root) {
-            this.draw(this.root, []);
-        }
     }
 
     public drop(key: number): Node<T> | null {
@@ -30,32 +35,6 @@ export class Tree<T> {
         }
 
         return node;
-    }
-
-    private draw(node: Node<T>, arr: T[]) {
-
-        if (node && node.left && node.right) {
-            arr = [node.left.value, node.right.value];
-
-            this.putInArray(node, arr);
-            this.draw(node.left, arr);
-            this.draw(node.right, arr);
-        }
-
-    }
-
-    private putInArray(node: Node<T>, array: T[]) {
-        const index = array.indexOf(node.value);
-
-        if (index) {   
-            if (node.right) {
-                array.splice(index, 1, node.right.value)
-            }
-
-            if (node.left) {
-                array.splice(index, 1, node.left.value)
-            }
-        }
     }
 
     private insertNode(root: Node<T> | null, node: Node<T>): void {
@@ -88,15 +67,15 @@ export class Tree<T> {
     }
 
     private insertRepairTree(node: Node<T> | null): void {
-        console.log('insertRepairTree')
+        console.log('insertRepairTree');
         if (!getParent(node) && node) {
             node.color = Color.BLACK;
         } else if (getParent(node)?.color === Color.BLACK) {
             return;
         } else if (getUncle(node) && getUncle(node)?.color === Color.RED) {
-            maybe(getParent(node), node => node.color = Color.BLACK);
-            maybe(getUncle(node), node => node.color = Color.BLACK);
-            maybe(getGrandParent(node), node => node.color = Color.RED);
+            maybe(getParent(node), (node) => (node.color = Color.BLACK));
+            maybe(getUncle(node), (node) => (node.color = Color.BLACK));
+            maybe(getGrandParent(node), (node) => (node.color = Color.RED));
             this.insertRepairTree(getGrandParent(node));
         } else {
             const parent: Node<T> | null = getParent(node);
@@ -133,7 +112,8 @@ export class Tree<T> {
 
     private deleteNode(node: Node<T>): void {
         const toReplace: Node<T> | null = this.replace(node);
-        const bothAreBlack = toReplace?.color === Color.BLACK && node.color === Color.BLACK;
+        const bothAreBlack =
+            toReplace?.color === Color.BLACK && node.color === Color.BLACK;
         const parent: Node<T> | null = node.parent;
 
         if (!toReplace) {
@@ -154,9 +134,9 @@ export class Tree<T> {
 
                 // delete node from tree
                 if (isOnLeft(node)) {
-                    maybe(parent, parent => parent.left = null);
+                    maybe(parent, (parent) => (parent.left = null));
                 } else {
-                    maybe(parent, parent => parent.right = null);
+                    maybe(parent, (parent) => (parent.right = null));
                 }
             }
 
@@ -166,14 +146,14 @@ export class Tree<T> {
         if (!node.left && !node.right) {
             if (node === this.root) {
                 // node is root, assign the value of toReplace to node, and delete toReplace
-                node.value = toReplace.value
+                node.value = toReplace.value;
                 node.left = node.right = null;
             } else {
                 // detach node from tree and mode toReplace up
                 if (isOnLeft(node)) {
-                    maybe(parent, parent => parent.left = toReplace);
+                    maybe(parent, (parent) => (parent.left = toReplace));
                 } else {
-                    maybe(parent, parent => parent.right = toReplace);
+                    maybe(parent, (parent) => (parent.right = toReplace));
                 }
 
                 toReplace.parent = parent;
@@ -209,8 +189,8 @@ export class Tree<T> {
         } else {
             if (sibling && sibling.color === Color.RED) {
                 // sibling is RED
-                maybe(parent, parent => parent.color = Color.RED);
-                maybe(sibling, sibling => sibling.color = Color.BLACK);
+                maybe(parent, (parent) => (parent.color = Color.RED));
+                maybe(sibling, (sibling) => (sibling.color = Color.BLACK));
                 if (isOnLeft(sibling)) {
                     // left case
                     this.rotateRight(parent);
@@ -227,28 +207,51 @@ export class Tree<T> {
                         if (isOnLeft(sibling)) {
                             // left left
                             sibling.left.color = sibling.color;
-                            maybe(parent, parent => sibling.color = parent.color);
+                            maybe(
+                                parent,
+                                (parent) => (sibling.color = parent.color)
+                            );
                             this.rotateRight(parent);
                         } else {
-                            // right left 
-                            maybe(parent, parent => maybe(sibling, sibling => maybe(sibling.left, left => left.color = parent.color)));
+                            // right left
+                            maybe(parent, (parent) =>
+                                maybe(sibling, (sibling) =>
+                                    maybe(
+                                        sibling.left,
+                                        (left) => (left.color = parent.color)
+                                    )
+                                )
+                            );
                             this.rotateRight(sibling);
                             this.rotateLeft(parent);
                         }
                     } else {
                         if (isOnLeft(sibling)) {
                             // left right
-                            maybe(parent, parent => maybe(sibling, sibling => maybe(sibling.right, right => right.color = parent.color)));
+                            maybe(parent, (parent) =>
+                                maybe(sibling, (sibling) =>
+                                    maybe(
+                                        sibling.right,
+                                        (right) => (right.color = parent.color)
+                                    )
+                                )
+                            );
                             this.rotateLeft(sibling);
                             this.rotateRight(parent);
                         } else {
-                            // right right 
-                            maybe(sibling.right, right => right.color = sibling.color);
-                            maybe(parent, parent => sibling.color = parent.color);
+                            // right right
+                            maybe(
+                                sibling.right,
+                                (right) => (right.color = sibling.color)
+                            );
+                            maybe(
+                                parent,
+                                (parent) => (sibling.color = parent.color)
+                            );
                             this.rotateLeft(parent);
                         }
                     }
-                    maybe(parent, parent => parent.color = Color.BLACK);
+                    maybe(parent, (parent) => (parent.color = Color.BLACK));
                 } else {
                     // 2 black children
                     sibling.color = Color.RED;
@@ -256,7 +259,7 @@ export class Tree<T> {
                     if (parent?.color === Color.BLACK) {
                         this.fixDoubleBlack(parent);
                     } else {
-                        maybe(parent, parent => parent.color = Color.BLACK);
+                        maybe(parent, (parent) => (parent.color = Color.BLACK));
                     }
                 }
             }
@@ -264,7 +267,7 @@ export class Tree<T> {
     }
 
     /**
-     * find node that replaces a deleted node in BST 
+     * find node that replaces a deleted node in BST
      */
     private replace(node: Node<T>): Node<T> | null {
         if (node.left && node.right) {
@@ -291,7 +294,7 @@ export class Tree<T> {
     }
 
     private rotateLeft(node: Node<T> | null): void {
-        console.log('rotateLeft')
+        console.log('rotateLeft');
 
         if (!node) {
             return;
@@ -324,7 +327,7 @@ export class Tree<T> {
     }
 
     private rotateRight(node: Node<T> | null): void {
-        console.log('rotateRight')
+        console.log('rotateRight');
 
         if (!node) {
             return;

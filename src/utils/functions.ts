@@ -27,7 +27,7 @@ export function maybe<T>(value: T | null, callback: (value: T) => void): void {
     if (value) {
         callback(value);
     }
-} 
+}
 
 export function isOnLeft<T>(node: Node<T> | null): boolean {
     return node?.parent?.left === node;
@@ -38,8 +38,7 @@ export function hasRedChild<T>(node: Node<T> | null): boolean {
 }
 
 export function swapValues<T>(firstNode: Node<T>, secondNode: Node<T>): void {
-    let temp: T;
-    temp = firstNode.value;
+    const temp = firstNode.value;
     firstNode.value = secondNode.value;
     secondNode.value = temp;
 }
